@@ -5,12 +5,12 @@ Terraform module which creates VPC resources on AWS.
 ## Usage
 
 ```hcl
-module "vpc" {
-  source = "github.com/Radkowski/ipv6-vpc"
+module "vpc" {  
+  source           = "github.com/Radkowski/ipv6-vpc"
   
-  DeploymentName = "MyVPC"
-  VPC_CIDR       = "10.0.0.0/16"
-  IPv6_ENABLED   = true
+  DeploymentName   = "MyVPC"
+  VPC_CIDR         = "10.0.0.0/16"
+  IPv6_ENABLED     = true
   PubPrivPairCount = 3
 }
 ```
