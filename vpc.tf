@@ -34,7 +34,7 @@ resource "aws_subnet" "Pub-Subnet" {
   assign_ipv6_address_on_creation = var.IPv6_ENABLED ? true : false
   map_public_ip_on_launch         = true
   tags = {
-    Name = join("", [var.DeploymentName, "-Pub-",substr (data.aws_availability_zones.AZs.names[count.index % local.AZs_count],-2,-1)])
+    Name = join("", [var.DeploymentName, "-Pub-", substr(data.aws_availability_zones.AZs.names[count.index % local.AZs_count], -2, -1)])
   }
 }
 
@@ -48,7 +48,7 @@ resource "aws_subnet" "Priv-Subnet" {
   assign_ipv6_address_on_creation = var.IPv6_ENABLED ? true : false
   map_public_ip_on_launch         = false
   tags = {
-    Name = join("", [var.DeploymentName, "-Priv-",substr (data.aws_availability_zones.AZs.names[count.index % local.AZs_count],-2,-1)])
+    Name = join("", [var.DeploymentName, "-Priv-", substr(data.aws_availability_zones.AZs.names[count.index % local.AZs_count], -2, -1)])
   }
 }
 
