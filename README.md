@@ -5,6 +5,10 @@ Terraform module which creates VPC resources on AWS.
 ## Usage
 
 ```hcl
+provider "aws" {
+  region = "REGION"
+}
+
 module "vpc" {  
   source           = "github.com/Radkowski/ipv6-vpc"
   
@@ -17,6 +21,7 @@ module "vpc" {
 
 ## Parameters
 
+* `REGION`: Deployment Region
 * `DeploymentName`: prefix to be added to resources name (VPC and subnets)
 * `VPC_CIDR`: IPv4 VPC CIDR to be allocated with VPC
 * `IPv6_ENABLED`: if true, VPC will be deployed in dual stack scenario
