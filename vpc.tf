@@ -20,9 +20,7 @@ resource "aws_vpc" "RadLabVPC" {
   instance_tenancy                 = "default"
   enable_dns_hostnames             = "true"
   assign_generated_ipv6_cidr_block = var.IPv6_ENABLED ? true : false
-  tags = {
-    Name = var.DeploymentName
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-VPC"]) })
 }
 
 
@@ -56,16 +54,14 @@ resource "aws_subnet" "Priv-Subnet" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.RadLabVPC.id
-  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "IGW"]) })
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-IGW"]) })
 }
 
 
 resource "aws_eip" "natgw_ip" {
   count      = var.PubPrivPairCount
   depends_on = [aws_internet_gateway.igw]
-  tags = {
-    Name = join("", [var.DeploymentName, "-NATGW-IP-", count.index])
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-NATGW-IP-", count.index]) })
 }
 
 
@@ -74,27 +70,21 @@ resource "aws_nat_gateway" "natgw" {
   allocation_id = aws_eip.natgw_ip[count.index].id
   subnet_id     = aws_subnet.Pub-Subnet[count.index].id
   depends_on    = [aws_internet_gateway.igw, aws_eip.natgw_ip]
-  tags = {
-    Name = join("", [var.DeploymentName, "-NATGW-", count.index])
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-NATGW-", count.index]) })
 }
 
 
 resource "aws_egress_only_internet_gateway" "egw" {
   count  = var.IPv6_ENABLED ? 1 : 0
   vpc_id = aws_vpc.RadLabVPC.id
-  tags = {
-    Name = join("", [var.DeploymentName, "-EIGW"])
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-EIGW"]) })
 }
 
 
 resource "aws_route_table" "Pub-Route" {
   depends_on = [aws_vpc.RadLabVPC, aws_internet_gateway.igw]
   vpc_id     = aws_vpc.RadLabVPC.id
-  tags = {
-    Name = join("", [var.DeploymentName, "-Pub"])
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-Pub"]) })
 }
 
 
@@ -102,9 +92,7 @@ resource "aws_route_table" "Priv-Route" {
   count      = var.PubPrivPairCount
   depends_on = [aws_vpc.RadLabVPC, aws_internet_gateway.igw]
   vpc_id     = aws_vpc.RadLabVPC.id
-  tags = {
-    Name = join("", [var.DeploymentName, "-Priv-", count.index])
-  }
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "-Priv-", count.index]) })  
 }
 
 
