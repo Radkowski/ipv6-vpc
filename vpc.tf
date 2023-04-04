@@ -12,7 +12,7 @@ variable "DeploymentName" {}
 variable "VPC_CIDR" {}
 variable "IPv6_ENABLED" {}
 variable "PubPrivPairCount" {}
-variable "AUTHTAGS" {}
+variable "AuthTags" {}
 
 
 resource "aws_vpc" "RadLabVPC" {
@@ -56,7 +56,7 @@ resource "aws_subnet" "Priv-Subnet" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.RadLabVPC.id
-  tags   = merge(var.AUTHTAGS, { Name = join("", [var.DeploymentName, "IGW"]) })
+  tags   = merge(var.AuthTags, { Name = join("", [var.DeploymentName, "IGW"]) })
 }
 
 
